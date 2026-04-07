@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+:root {
+  --accent: #aa3bff;
+}
+
+body {
+  @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  margin: 0;
+  font-family:
+    "Inter",
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+
+/* Dark mode manual jika diperlukan */
+.dark body {
+  @apply bg-slate-950 text-slate-100;
+}
+
+/* Theme Backgrounds */
+.theme-container {
+  background-color: #0f172a; /* default: cosmic/slate-900 */
+}
+[data-theme="cosmic"] .theme-container {
+  background: radial-gradient(circle at center, #1e1b4b 0%, #0f172a 100%);
+}
+[data-theme="ocean"] .theme-container {
+  background: radial-gradient(circle at top, #0c4a6e 0%, #082f49 100%);
+}
+[data-theme="forest"] .theme-container {
+  background: radial-gradient(circle at bottom right, #064e3b 0%, #022c22 100%);
+}
+[data-theme="sunset"] .theme-container {
+  background: radial-gradient(circle at bottom, #7c2d12 0%, #451a03 100%);
+}
+[data-theme="candy"] .theme-container {
+  background: radial-gradient(circle at center, #831843 0%, #4c0519 100%);
+}
+[data-theme="midnight"] .theme-container {
+  background: linear-gradient(180deg, #171717 0%, #0a0a0a 100%);
+}
+
+/* Custom Scrollbar agar lebih modern */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full;
+}
+.dark ::-webkit-scrollbar-thumb {
+  @apply bg-slate-700;
+}
+
+/* Animasi sederhana untuk transisi soal */
+.fade-enter {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.fade-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
