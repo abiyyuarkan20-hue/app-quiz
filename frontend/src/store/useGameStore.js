@@ -2,7 +2,8 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import { io } from "socket.io-client";
 
-const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "http://localhost:3000";
+const SOCKET_URL =
+  import.meta.env.VITE_SOCKET_URL || "app-quiz-production-6a61.up.railway.app";
 
 // Single socket instance
 const socket = io(SOCKET_URL, {
@@ -101,17 +102,21 @@ export const useGameStore = create(
             if (roomCode) {
               s.emit("join_room", {
                 roomCode,
-                playerName: playerName || (localStorage.getItem("isAdmin") === "true" ? "ADMIN_HOST" : "Player"),
+                playerName:
+                  playerName ||
+                  (localStorage.getItem("isAdmin") === "true"
+                    ? "ADMIN_HOST"
+                    : "Player"),
                 email: playerEmail,
                 whatsapp: playerPhone,
               });
             }
             // Request global theme
             s.emit("request_theme", (res) => {
-               if (res && res.theme) {
-                  set({ theme: res.theme });
-                  document.documentElement.setAttribute("data-theme", res.theme);
-               }
+              if (res && res.theme) {
+                set({ theme: res.theme });
+                document.documentElement.setAttribute("data-theme", res.theme);
+              }
             });
           });
           s.on("disconnect", () => set({ isConnected: false }));
@@ -178,7 +183,10 @@ export const useGameStore = create(
           set({
             currentQuestion: data.question,
             timeLimit: data.timeLimit,
-            currentQuestionIndex: data.currentIndex !== undefined ? data.currentIndex : get().currentQuestionIndex,
+            currentQuestionIndex:
+              data.currentIndex !== undefined
+                ? data.currentIndex
+                : get().currentQuestionIndex,
             totalQuestions: data.totalQuestions || get().totalQuestions,
             isResultPhase: false,
             showResult: false,
@@ -204,26 +212,30 @@ export const useGameStore = create(
         });
 
         s.on("show_result", (data) => {
-          const updates = { showResult: true, correctAnswer: data.correctAnswer, isResultPhase: true };
+          const updates = {
+            showResult: true,
+            correctAnswer: data.correctAnswer,
+            isResultPhase: true,
+          };
           if (data.players) {
-             updates.players = data.players.map(p => ({
-               name: p.name || p.playerName,
-               hasAnswered: p.hasAnswered,
-               score: p.score,
-               isCorrect: p.isCorrect,
-               correctAnswers: p.correctAnswers || 0,
-               incorrectAnswers: p.incorrectAnswers || 0,
-               totalAnswered: p.totalAnswered || 0,
-             }));
+            updates.players = data.players.map((p) => ({
+              name: p.name || p.playerName,
+              hasAnswered: p.hasAnswered,
+              score: p.score,
+              isCorrect: p.isCorrect,
+              correctAnswers: p.correctAnswers || 0,
+              incorrectAnswers: p.incorrectAnswers || 0,
+              totalAnswered: p.totalAnswered || 0,
+            }));
 
-             // Sync score from server (authoritative Redis value)
-             const currentPlayerName = get().playerName;
-             const serverPlayer = data.players.find(
-               (p) => (p.name || p.playerName) === currentPlayerName
-             );
-             if (serverPlayer && typeof serverPlayer.score === "number") {
-               updates.score = serverPlayer.score;
-             }
+            // Sync score from server (authoritative Redis value)
+            const currentPlayerName = get().playerName;
+            const serverPlayer = data.players.find(
+              (p) => (p.name || p.playerName) === currentPlayerName,
+            );
+            if (serverPlayer && typeof serverPlayer.score === "number") {
+              updates.score = serverPlayer.score;
+            }
           }
           set(updates);
         });
@@ -242,16 +254,16 @@ export const useGameStore = create(
           const lastQuizTitle = get().activeQuizTitle;
 
           get().resetGame();
-          
+
           if (!isAdmin) {
-             set({
-               gameState: "PLAYER_LEADERBOARD",
-               playerName: lastPlayerName,
-               lastRoomCode: lastRoomCode,
-               activeQuizTitle: lastQuizTitle,
-             });
+            set({
+              gameState: "PLAYER_LEADERBOARD",
+              playerName: lastPlayerName,
+              lastRoomCode: lastRoomCode,
+              activeQuizTitle: lastQuizTitle,
+            });
           } else {
-             set({ gameState: "ADMIN_DASHBOARD" });
+            set({ gameState: "ADMIN_DASHBOARD" });
           }
         });
       },
