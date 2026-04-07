@@ -23,9 +23,7 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 const supabase = createSupabaseClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // 3. Konfigurasi Redis
-const redisUrl =
-  REDIS_URL ||
-  "rediss://default:gQAAAAAAAUFWAAIncDIzMDY2ZGQ4ZmZmMzE0NWZlODBkMjVkMDJkNTI5YjU5M3AyODIyNjI@pleasant-flamingo-82262.upstash.io:6379";
+const redisUrl = REDIS_URL || "redis://127.0.0.1:6379";
 const pubClient = createRedisClient({ url: redisUrl });
 const subClient = pubClient.duplicate();
 
