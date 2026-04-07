@@ -8,7 +8,7 @@ const SOCKET_URL =
 
 // Single socket instance
 const socket = io(SOCKET_URL, {
-  transports: ["websocket"],
+  transports: ["polling", "websocket"],
   autoConnect: false,
 });
 
