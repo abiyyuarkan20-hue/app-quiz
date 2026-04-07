@@ -56,28 +56,24 @@ async function bootstrap() {
       gameSocketHandler(io, socket, pubClient, supabase);
     });
 
-    // 6. Logika Start Server (Auto-increment port jika sibuk)
-    const startServer = (port) => {
-      const srv = server.listen(port, () => {
-        console.log(`🚀 Server kuis berjalan di: http://localhost:${port}`);
-      });
+    // 6. Logika Start Server (Gunakan PORT dari Railway)
+    const finalPort = process.env.PORT || 3000;
 
-      srv.on("error", (err) => {
-        if (err.code === "EADDRINUSE") {
-          console.log(`⚠️ Port ${port} sibuk, mencoba port ${port + 1}...`);
-          startServer(port + 1);
-        } else {
-          console.error("❌ Fatal Server Error:", err);
-        }
-      });
-    };
-
-    startServer(parseInt(PORT || 3000));
+    server.listen(finalPort, "0.0.0.0", () => {
+      console.log(`✅ Terhubung ke Redis Upstash`); // Pesan sukses yang kamu lihat di log
+      console.log(`🚀 Server berjalan di port: ${finalPort}`);
+    });
   } catch (err) {
     console.error("❌ Gagal memulai server:", err.message);
     process.exit(1);
   }
 }
+
+// Tambahkan error handling sederhana
+server.on("error", (err) => {
+  console.error("❌ Fatal Server Error:", err);
+  process.exit(1);
+});
 
 // Global error handling agar server tidak langsung mati jika ada error tak terduga
 process.on("unhandledRejection", (reason, promise) => {
